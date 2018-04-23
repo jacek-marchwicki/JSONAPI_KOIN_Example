@@ -48,7 +48,6 @@ class MainActivity : AppCompatActivity() {
                     if (result.data != null) {
                         swipeRefreshLayout.visible()
                         adapter.items = result.data
-                        adapter.notifyDataSetChanged()
                     }
                 }
             }

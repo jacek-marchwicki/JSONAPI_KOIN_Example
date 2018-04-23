@@ -10,10 +10,10 @@ import com.jsonapiexample.model.Author
 class AuthorsRecyclerAdapter : RecyclerView.Adapter<AuthorsViewHolder>() {
 
     var items: List<Author> = listOf()
-//        set(value) {
-//            items = value
-//            notifyDataSetChanged()
-//        }
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     override fun getItemCount() = items.size
 

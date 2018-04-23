@@ -12,6 +12,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.TestScheduler
 import okhttp3.MediaType
 import okhttp3.Protocol
 import org.koin.standalone.StandAloneContext.closeKoin
@@ -43,9 +44,11 @@ class MainViewModelTest : KoinTest {
     @Test
     fun `check error handling`() {
         val mainAPI: MainAPI = mock()
+        val io = TestScheduler()
+        val ui = TestScheduler()
         val mainViewModel = MainViewModel(mainAPI, object : SchedulerProvider {
-            override fun io() = Schedulers.io()
-            override fun ui() = Schedulers.io()
+            override fun io() = io
+            override fun ui() = ui
             override fun computation() = Schedulers.io()
         })
 
@@ -54,7 +57,10 @@ class MainViewModelTest : KoinTest {
         ))))
 
         mainViewModel.getAuthors()
-        Thread.sleep(1000)
+
+        io.triggerActions()
+        ui.triggerActions()
+//        Thread.sleep(1000)
 //        verify(mainAPI).authors()
         Assert.assertTrue(mainViewModel.authorsLiveData.value is Result.Error
                 && (mainViewModel.authorsLiveData.value as Result.Error).throwable is HttpException
